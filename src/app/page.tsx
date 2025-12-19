@@ -1,5 +1,43 @@
 "use client";
 
+import { supabase } from '@/lib/supabase'
+
+type Moto = {
+  id: string
+  marca: string
+  modelo: string
+  ano: number
+  km: number
+  preco: number
+  status: string
+}
+
+export default async function Home() {
+  const { data: motos, error } = await supabase
+    .from('motos')
+    .select('*')
+    .eq('status', 'disponível')
+
+  if (error) {
+    return <p>Erro ao carregar motos</p>
+  }
+
+  return (
+    <main style={{ padding: 40 }}>
+      <h1>Motos disponíveis</h1>
+
+      {motos?.map((moto: Moto) => (
+        <div key={moto.id} style={{ marginBottom: 20 }}>
+          <h2>{moto.marca} {moto.modelo}</h2>
+          <p>Ano: {moto.ano}</p>
+          <p>KM: {moto.km}</p>
+          <p>Preço: R$ {moto.preco}</p>
+        </div>
+      ))}
+    </main>
+  )
+}
+
 import { useState, useEffect } from "react";
 import { Phone, MapPin, Instagram, MessageCircle, Check, Shield, Clock, Award, ChevronRight, Star } from "lucide-react";
 
